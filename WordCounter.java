@@ -1,5 +1,9 @@
-//import java.util.regex.Matcher;
-//import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class WordCounter {
 
@@ -13,24 +17,71 @@ public class WordCounter {
     //if stopword is null, count all words in the file
     //return integer word count, unless count was less than five, then you would raise 
     //TooSmallText exception (REGARDLESS OF WHETHER STOPWORD IS FOUND)
-    public int processText(){
- 
-        // Pattern regex = Pattern.compile("your regular expression here");
-        // Matcher regexMatcher = regex.matcher(text);
-        // while (regexMatcher.find()) {
-        //     System.out.println("I just found the word: " + regexMatcher.group());
-        // } 
+    public int processText(StringBuffer text, String stopword) throws InvalidStopwordException, TooSmallText {
+        int count = 0;//counts the number of words in text through the stopword
 
+        //try {
+            Pattern regex = Pattern.compile("[a-zA-Z0-9']+") ;
+            Matcher regexMatcher = regex.matcher(text);
+            
+            while (regexMatcher.find()) {//find each word in the text the matches the expression
+                count++;//incrementing count everytime word is found 
+                String foundword = regexMatcher.group(); //retrieving the content of the word itself
+                //System.out.println("I just found the word: " + regexMatcher.group());
+
+                if(stopword != null){//stopword found!
+                    return count;//returning word count up until this point
+                }
+            } 
+
+            if(stopword != null){
+                throw new InvalidStopwordException("Couldn't find stopword: " + stopword );
+            }
+
+            if(count < 5){
+                throw new TooSmallText("Only found " + count + "words.");
+            }
+    
+        //}
+        
+    
+        return count; 
     }
 
     //expects String path as an argument, converts contents of the file to StringBuffer
     //^which it returns
     //if file cannot be opened, prompt user to re-enter the filename until they enter a file
     //that can be opened
-    //if tfile is empty, method should raise an EmptyFileException that contains 
+    //if the file is empty, method should raise an EmptyFileException that contains 
     //the file’s path in its message
-    public int processFile(){
+    public StringBuffer processFile(String path) throws EmptyFileException{
+        
+        StringBuffer filecontents = new StringBuffer();
+        Scanner sc = new Scanner(System.in);
 
+            while (filecontents == null){
+                //String newfile;
+                try (BufferedReader b = new BufferedReader(new FileReader(path))){
+                    String linecontents;
+
+                    while ((linecontents = b.readLine()) != null){
+                        filecontents.append(b);
+                    }
+
+                    if(filecontents.length() == 0){
+                        throw new EmptyFileException(path + " was empty");
+                    }
+                    break;//exiting loop
+                }
+
+                catch (IOException e){
+                    System.out.println("Please re-enter the filename: ");
+                    path = sc.nextLine();
+                }
+
+            }
+
+        return filecontents; 
     }
 
     //asks user to choose to process either
@@ -45,6 +96,15 @@ public class WordCounter {
     //and try to process that again 
     //if user enters another stopword that can't be found, report that to user
     public int main(){
+        
+        Scanner sc = new Scanner(System.in);
+        String option = "";
+        
+        
+        
+        option = sc.nextLine();
+
+
 
     }
 
