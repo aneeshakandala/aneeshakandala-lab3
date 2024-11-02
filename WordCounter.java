@@ -95,16 +95,19 @@ public class WordCounter {
     //if stopword was not found in the text, allow user one chance to re-specify the stopword
     //and try to process that again 
     //if user enters another stopword that can't be found, report that to user
-    public int main(){
+    public static void main(String[] args){
         
         Scanner sc = new Scanner(System.in);
-        String option = "";
-        
-        
-        
-        option = sc.nextLine();
+        String option = null; //option being inputed, either 1 or 2 
+        String stopword = null;
 
+        while (stopword == null){
+            System.out.println("Please choose an option. Type option 1 for file, 2 for text");
+            option = sc.nextLine();
 
+            
+        }
+        
 
     }
 
