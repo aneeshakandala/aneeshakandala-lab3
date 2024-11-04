@@ -17,7 +17,7 @@ public class WordCounter {
     //if stopword is null, count all words in the file
     //return integer word count, unless count was less than five, then you would raise 
     //TooSmallText exception (REGARDLESS OF WHETHER STOPWORD IS FOUND)
-    public int processText(StringBuffer text, String stopword) throws InvalidStopwordException, TooSmallText {
+    public static int processText(StringBuffer text, String stopword) throws InvalidStopwordException, TooSmallText {
         int count = 0;//counts the number of words in text through the stopword
 
         //try {
@@ -54,7 +54,7 @@ public class WordCounter {
     //that can be opened
     //if the file is empty, method should raise an EmptyFileException that contains 
     //the file’s path in its message
-    public StringBuffer processFile(String path) throws EmptyFileException{
+    public static StringBuffer processFile(String path) throws EmptyFileException{
         
         StringBuffer filecontents = new StringBuffer();
         Scanner sc = new Scanner(System.in);
@@ -104,9 +104,44 @@ public class WordCounter {
         while (stopword == null){
             System.out.println("Please choose an option. Type option 1 for file, 2 for text");
             option = sc.nextLine();
+            
+            if(option.equals("1") || option.equals("2")){
+                return;
+                //break; //?
+            }
+            else{
+                System.out.println("Choose again until you have the right option, either '1' or '2' ");
+            }
+        }
 
+
+        try {
+            StringBuffer r;
+            if (option.equals("1")){
+                System.out.println("Enter the filename: ");
+                String filename = sc.nextLine();
+                r = processFile(filename);
+                System.out.println("Number of words counted: " + processText(r, stopword));
+            }
+            else if (option.equals("2")) {
+                System.out.println("Enter the text: ");
+                
+                System.out.println("Number of words counted: " + processText( , stopword));
+            }
+        }
+        catch(InvalidStopwordException e){
             
         }
+        catch(EmptyFileException e){
+
+        }
+        catch(TooSmallText e){
+
+        }
+        catch(Exception e){
+
+        }
+
         
 
     }
