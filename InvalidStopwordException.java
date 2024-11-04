@@ -3,8 +3,15 @@
 
 public class InvalidStopwordException extends Exception {
     
-    public InvalidStopwordException(String m) {
-        super(m);
+    private String e; 
+
+    public InvalidStopwordException(String e) {
+        this.e = e;
+    }
+
+    @Override
+    public String toString(){
+        return "InvalidStopwordException: " + e;
     }
 
 }

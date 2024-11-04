@@ -2,6 +2,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Scanner;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -63,29 +64,37 @@ public class WordCounter {
         
         StringBuffer filecontents = new StringBuffer();
         Scanner sc = new Scanner(System.in);
+        boolean fileValid = false; 
 
-            while (filecontents == null){
-                //String newfile;
-                try (BufferedReader b = new BufferedReader(new FileReader(path))){
+            while (fileValid == false){
+                try { 
+                    BufferedReader b = new BufferedReader(new FileReader(path));
                     String linecontents;
+                    fileValid = true;
 
                     while ((linecontents = b.readLine()) != null){
-                        filecontents.append(b);
+                        filecontents.append(linecontents).append("");
                     }
+                    b.close();
 
-                    if(filecontents.length() == 0){
+                    if(filecontents.length() == 0){//check if buffered reader is empty 
                         throw new EmptyFileException(path + " was empty");
                     }
-                    break;//exiting loop
                 }
 
-                catch (IOException e){
+                catch (FileNotFoundException e){
+                    fileValid = false;
                     System.out.println("Please re-enter the filename: ");
                     path = sc.nextLine();
+                   
                 }
-
+                catch (IOException e){
+                    System.out.println("process missing file");
+                    filecontents = null;
+                    throw new EmptyFileException(path + " was empty");
+                }
+                sc.close();
             }
-
         return filecontents; 
     }
 
@@ -105,50 +114,79 @@ public class WordCounter {
         Scanner sc = new Scanner(System.in);
         String option = null; //option being inputed, either 1 or 2 
         String stopword = null;
+        String linepath = args[0];
 
-        while (stopword == null){
-            System.out.println("Please choose an option. Type option 1 for file, 2 for text");
+        System.out.println("Please choose an option. Type option 1 for file, 2 for text");
+        option = sc.nextLine();
+
+         if (args.length > 1) {
+            linepath = args[0];
+             stopword = args[1];
+         }
+
+
+        while (option.equals("1") || option.equals("2")){
+            System.out.println("Please choose an option. Type option 1 for file, 2 for text");  
             option = sc.nextLine();
-            
-            if(option.equals("1") || option.equals("2")){
-                //return;
-                break; //?
-            }
-            else{
-                System.out.println("Choose again until you have the right option, either '1' or '2' ");
-            }
-        }
 
-
-        try {
-            StringBuffer r;
+        }   
             if (option.equals("1")){
-                System.out.println("Enter the filename: ");
-                String filename = sc.nextLine();
-                r = processFile(filename);
-                System.out.println("Number of words counted: " + processText(r, stopword));
+                StringBuffer r;
+                try {
+                    //System.out.println("Enter the filename: ");
+                    r = processFile(linepath);
+                    System.out.println("Number of words counted: " + processText(r, stopword));
+                }
+            
+                catch (EmptyFileException e){
+                        r = new StringBuffer();
+                    // System.out.println("Enter the filename: ");
+                    // String filename = sc.nextLine();
+                    // System.out.println(e);
+                     try {
+                        //nestedr = processFile(filename);
+                        System.out.println("Number of words counted: " + processText(r, null));
+                     }
+                     catch (TooSmallText nestede){
+                        System.out.println(nestede);
+                    }
+                    catch (InvalidStopwordException nestede){
+                        System.out.println(nestede);
+                    }
+                    catch (Exception nestede){
+                        System.out.println(nestede);
+                    }
+
+                }
+                catch (InvalidStopwordException e){
+                    System.out.println(e);
+                }
+                catch (TooSmallText e){
+                    System.out.println(e);
+                }
+                catch (Exception e){
+                    System.out.println(e);
+                }
             }
+
             else if (option.equals("2")) {
-                System.out.println("Enter the text: ");
-                StringBuffer b = new StringBuffer(sc.nextLine());
-                System.out.println("Number of words counted: " + processText(b, stopword));
+                try {
+                    System.out.println("Enter the text: ");
+                    StringBuffer b = new StringBuffer(sc.nextLine());
+                    System.out.println("Number of words counted: " + processText(b, stopword));
+                    }
+                catch (InvalidStopwordException e){
+                    System.out.println(e);
+                }
+                catch (TooSmallText e){
+                    System.out.println(e);
+                }
+                catch (Exception e){
+                    System.out.println(e);
+                }
             }
+            sc.close();
         }
 
-        catch (InvalidStopwordException e){
-            System.out.println(e);
-        }
-        catch (EmptyFileException e){
-            System.out.println(e);
-        }
-        catch (TooSmallText e){
-            System.out.println(e);
-        }
-        catch (Exception e){
-            System.out.println(e);
-        }
-        // finally {
-        //     sc.close();
-        // }
     }
-}
+

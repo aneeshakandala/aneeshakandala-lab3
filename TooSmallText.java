@@ -2,9 +2,15 @@
 //length of the text is less than five words.
 
 public class TooSmallText extends Exception {
-   
-    public TooSmallText(String m) {
-        super(m);
+   private String e;
+
+    public TooSmallText(String e) {
+        this.e = e;
+    }
+
+    @Override
+    public String toString(){
+        return "TooSmallText: " + e;
     }
 
 }
