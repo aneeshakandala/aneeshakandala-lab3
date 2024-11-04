@@ -1,0 +1,3 @@
+Please choose an option. Type option 1 for file, 2 for text
+Enter the filename: 
+java.util.NoSuchElementException: No line found

@@ -9,9 +9,13 @@ import java.io.IOException;
         System.out.println(e); // will print whatever string you passed to the constructor
     }
 */
-public class EmptyFileException extends IOException{
+    public class EmptyFileException extends IOException {
 
-    
+        public EmptyFileException(String m) {
 
+            super(m);
 
-}
+        }
+
+    }
+

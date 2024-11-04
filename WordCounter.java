@@ -23,24 +23,29 @@ public class WordCounter {
         //try {
             Pattern regex = Pattern.compile("[a-zA-Z0-9']+") ;
             Matcher regexMatcher = regex.matcher(text);
-            
+            boolean stopwordfound = false;
+
             while (regexMatcher.find()) {//find each word in the text the matches the expression
                 count++;//incrementing count everytime word is found 
-                String foundword = regexMatcher.group(); //retrieving the content of the word itself
+                //String foundword = regexMatcher.group(); //retrieving the content of the word itself
                 //System.out.println("I just found the word: " + regexMatcher.group());
 
-                if(stopword != null){//stopword found!
-                    return count;//returning word count up until this point
+                if(regexMatcher.group().equals(stopword) && !(count < 5)){//stopword found!
+                    stopwordfound = true;
+                    //return count; //returning word count up until this point
+                    break;
                 }
             } 
 
-            if(stopword != null){
+            if(count < 5){
+                throw new TooSmallText("Only found " + count + " words.");
+            }
+
+            if(stopwordfound == false && stopword != null){
                 throw new InvalidStopwordException("Couldn't find stopword: " + stopword );
             }
 
-            if(count < 5){
-                throw new TooSmallText("Only found " + count + "words.");
-            }
+
     
         //}
         
@@ -106,8 +111,8 @@ public class WordCounter {
             option = sc.nextLine();
             
             if(option.equals("1") || option.equals("2")){
-                return;
-                //break; //?
+                //return;
+                break; //?
             }
             else{
                 System.out.println("Choose again until you have the right option, either '1' or '2' ");
@@ -125,27 +130,25 @@ public class WordCounter {
             }
             else if (option.equals("2")) {
                 System.out.println("Enter the text: ");
-                
-                System.out.println("Number of words counted: " + processText( , stopword));
+                StringBuffer b = new StringBuffer(sc.nextLine());
+                System.out.println("Number of words counted: " + processText(b, stopword));
             }
         }
-        catch(InvalidStopwordException e){
-            
+
+        catch (InvalidStopwordException e){
+            System.out.println(e);
         }
-        catch(EmptyFileException e){
-
+        catch (EmptyFileException e){
+            System.out.println(e);
         }
-        catch(TooSmallText e){
-
+        catch (TooSmallText e){
+            System.out.println(e);
         }
-        catch(Exception e){
-
+        catch (Exception e){
+            System.out.println(e);
         }
-
-        
-
+        // finally {
+        //     sc.close();
+        // }
     }
-
-
-
 }
